@@ -750,8 +750,6 @@ def test_models_demo(ta, write_clusters, out_dir, isProcessed, threshold):
 				outfile.write('\t'.join(cluster))
 				outfile.write('\n')
 
-			infile = open('data/sample.ta', 'r')
-			ta = json.load(infile)
 
 			# mentions_dict = {}
 			for v_idx, view in enumerate(ta['views']):
@@ -765,16 +763,18 @@ def test_models_demo(ta, write_clusters, out_dir, isProcessed, threshold):
 				for i, event_i in enumerate(cluster):
 					for j, event_j in enumerate(cluster):
 						if i >= j:
-							break
+							continue
+
 						ta['views'][v_idx]['viewData'][0]['relations'].append(
-							{'relationName': 'coref', 'srcConstituent':event_i.mention_id.split('_')[-1],
-						     'targetConstituent':event_j.mention_id.split('_')[-1]})
+							{'relationName': 'coref', 'srcConstituent':event_i.split('_')[-1],
+						     'targetConstituent':event_j.split('_')[-1]})
+
 			# outfile = open('out/sample.ta', 'w')
 			# json.dump(outfile, ta)
 			# 	print(cluster)
 			# 	outfile.write('\t'.join(cluster))
 			# 	outfile.write('\n')
-	print(ta)
+	# print(ta)
 	return ta
 
 
@@ -915,10 +915,13 @@ def main():
 			topic_event_list[topic2].add(mention2)
 
 		entailment_file.close()
-
-	test_models(write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
+	print(entailment_score)
+	# test_models(write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
 	# test_models_for_heng('all', test_data, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
-
+	data_path = 'data/sample.ta'
+	infile = open(data_path, 'r')
+	ta = json.load(infile)
+	test_models_demo(ta, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
 
 
 if __name__ == '__main__':

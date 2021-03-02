@@ -7,8 +7,6 @@ event_all = []
 data = {}
 
 def ReadData(ta):
-	# infile = open(path, 'r')
-	# ta = json.load(infile)
 
 	# for doc_id in ta.keys():
 	doc_dict = ta
@@ -17,10 +15,12 @@ def ReadData(ta):
 	doc.set_doc_info(str(doc_id), '')
 	last_index = 0
 	sen_token_idx = []
+	print(doc_dict)
+	total_sen = len(doc_dict['sentences']['sentenceEndPositions'])
 	for sen_idx, sen_end_idx in enumerate(doc_dict['sentences']['sentenceEndPositions']):
 		doc.sentences[sen_idx] = Sentence('0', doc_id)
-		sen_token_idx.append((last_index, sen_end_idx))
-		last_index = sen_end_idx + 1
+		sen_token_idx.append((last_index, sen_end_idx-1))
+		last_index = sen_end_idx
 
 	token_sen_mapping = {}
 	sen_token_mapping = {}
@@ -36,6 +36,15 @@ def ReadData(ta):
 				break
 	print(sen_token_idx)
 	print(token_sen_mapping)
+
+	sen_tokens_offset = [0]
+	for i in range(1, total_sen):
+		# print(i)
+		# print(sen_tokens_offset)
+		# print(doc.sentences)
+		# print(doc.sentences[i-1].tokens)
+		sen_tokens_offset.append(sen_tokens_offset[i - 1] + len(doc.sentences[i-1].tokens))
+	print(sen_tokens_offset)
 	mentions_dict = {}
 	for view in doc_dict['views']:
 		if view['viewName'] == 'Event_extraction':
@@ -45,7 +54,7 @@ def ReadData(ta):
 	for m_idx, mention in enumerate(mentions_dict):
 		if 'properties' in mention and 'predicate' in mention['properties']:
 			sen_id = mention['properties']['sentence_id']
-			event = Event('0', doc_id, sen_id, mention['start'], mention['end']-1, mention['start'], mention['end']-1)
+			event = Event('0', doc_id, sen_id, mention['start']-sen_tokens_offset[sen_id], mention['end']-1-sen_tokens_offset[sen_id], mention['start']-sen_tokens_offset[sen_id], mention['end']-1-sen_tokens_offset[sen_id])
 			event.mention_id = '_'.join([doc_id.replace('.xml', ''), str(sen_id), str(m_idx)])
 			event.event_idx = event_idx
 			event_all.append(event)
@@ -55,6 +64,8 @@ def ReadData(ta):
 	data[doc_id] = doc
 
 	outfile = open('data/pairs.input', 'w')
+
+	print(event_all)
 
 	for (i, event_i) in enumerate(event_all):
 		for (j, event_j) in enumerate(event_all):
@@ -86,7 +97,9 @@ def ReadData(ta):
 
 def main():
 	data_path = 'data/sample.ta'
-	ReadData(data_path)
+	infile = open(data_path, 'r')
+	ta = json.load(infile)
+	ReadData(ta)
 
 
 if __name__ == "__main__":

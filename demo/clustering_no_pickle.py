@@ -663,7 +663,89 @@ def test_models(write_clusters, out_dir, isProcessed, threshold):
 					clusters[coref_chain[mention]] = []
 				clusters[coref_chain[mention]].append(mention)
 
-			outfile = open('out/clusters.out', 'w')
+			# outfile = open('out/clusters.out', 'w')
+			outfile = open('clusters.out', 'w')
+			for cluster in clusters.values():
+				outfile.write('\t'.join(cluster))
+				outfile.write('\n')
+
+			# infile = open('data/sample.ta', 'r')
+			# ta = json.load(infile)
+			#
+			# # mentions_dict = {}
+			# for v_idx, view in enumerate(ta['views']):
+			# 	if view['viewName'] == 'Event_extraction':
+			# 		# mentions_dict = view['viewData'][0]['relations']
+			# 		break
+			#
+			# print(clusters)
+			#
+			# for cluster in clusters.values():
+			# 	for i, event_i in enumerate(cluster):
+			# 		for j, event_j in enumerate(cluster):
+			# 			if i >= j:
+			# 				break
+			# 			ta['views'][v_idx]['viewData'][0]['relations'].append(
+			# 				{'relationName': 'coref', 'srcConstituent':event_i.mention_id.split('_')[-1],
+			# 			     'targetConstituent':event_j.mention_id.split('_')[-1]})
+			# outfile = open('out/sample.ta', 'w')
+			# json.dump(outfile, ta)
+				# print(cluster)
+				# outfile.write('\t'.join(cluster))
+				# outfile.write('\n')
+	# print(ta)
+	# return ta
+
+def test_models_demo(ta, write_clusters, out_dir, isProcessed, threshold):
+	'''
+	Runs the inference procedure for both event and entity models calculates the B-cubed
+	score of their predictions.
+	:param test_set: Corpus object containing the test documents.
+	:param write_clusters: whether to write predicted clusters to file (for analysis purpose)
+	:param out_dir: output files directory
+	chains predicted by an external (WD) entity coreference system.
+	:return: B-cubed scores for the predicted event and entity clusters
+	'''
+
+	global clusters_count
+	clusters_count = 1
+
+
+	topics_counter = 0
+	epoch = 0 #
+	all_event_mentions = []
+	all_entity_mentions = []
+
+	with torch.no_grad():
+		for topic_id, topic in enumerate(topic_event_list.keys()):
+
+			topics_counter += 1
+
+			event_mentions = list(topic_event_list[topic])
+			all_event_mentions.extend(event_mentions)
+
+			topic_event_clusters = init_cd(event_mentions, is_event=True)
+
+			cluster_pairs, _ = generate_cluster_pairs(topic_event_clusters, is_train=False)
+			merge_cluster(topic_event_clusters, cluster_pairs, epoch, topics_counter, 0, threshold, True)
+
+			# cluster_pairs, _ = generate_cluster_pairs(topic_entity_clusters, is_train=False)
+			# merge_cluster(topic_entity_clusters, cluster_pairs, epoch, topics_counter, topics_num, threshold, alpha,
+			#               True)
+
+			set_coref_chain_to_mentions(topic_event_clusters, is_event=True, is_gold=True, intersect_with_gold=True)
+
+		if write_clusters:
+			# write_event_coref_results(test_set, out_dir, True, dataset)
+			clusters = {}
+
+			for mention in all_event_mentions:
+				if coref_chain[mention] not in clusters:
+					clusters[coref_chain[mention]] = []
+				clusters[coref_chain[mention]].append(mention)
+
+			# outfile = open('out/clusters.out', 'w')
+			outfile = open('clusters.out', 'w')
 			for cluster in clusters.values():
 				outfile.write('\t'.join(cluster))
 				outfile.write('\n')
@@ -677,7 +759,7 @@ def test_models(write_clusters, out_dir, isProcessed, threshold):
 					# mentions_dict = view['viewData'][0]['relations']
 					break
 
-			print(clusters)
+			# print(clusters)
 
 			for cluster in clusters.values():
 				for i, event_i in enumerate(cluster):
@@ -689,9 +771,9 @@ def test_models(write_clusters, out_dir, isProcessed, threshold):
 						     'targetConstituent':event_j.mention_id.split('_')[-1]})
 			# outfile = open('out/sample.ta', 'w')
 			# json.dump(outfile, ta)
-				# print(cluster)
-				# outfile.write('\t'.join(cluster))
-				# outfile.write('\n')
+			# 	print(cluster)
+			# 	outfile.write('\t'.join(cluster))
+			# 	outfile.write('\n')
 	print(ta)
 	return ta
 
@@ -760,7 +842,7 @@ def run_conll_scorer(isGold, gold_file_path, out_dir):
 	scores_file.close()
 	return event_f1
 
-def demo_cluster():
+def demo_cluster(ta):
 	logger.info('Test data have been loaded.')
 
 	threshold = 0.4
@@ -794,7 +876,7 @@ def demo_cluster():
 
 		entailment_file.close()
 
-	return test_models(write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
+	return test_models_demo(ta, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
 
 
 # test_models_for_heng('all', test_data, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)

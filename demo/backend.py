@@ -36,7 +36,7 @@ class MyWebService(object):
             # process input
             ReadData(data)
             demo_predict(args, 'data/pairs.input')
-            result = demo_cluster()
+            result = demo_cluster(data)
             print(result)
         return result
 

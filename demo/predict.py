@@ -804,7 +804,8 @@ def main():
 	if args.event:
 		if args.english:
 			print("Loading English Event Model.")
-			model.load_state_dict(torch.load('model/event/f1_0.7909405520391443.pt'))
+			# model.load_state_dict(torch.load('model/event/f1_0.7909405520391443.pt'))
+			model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/model_better/1e-06/f1_0.5072590402798975.pt'))
 		else:
 			print("Loading Spanish Event Model.")
 			model.load_state_dict(torch.load('model/event_xlmr/f1_0.593213087813911.pt'))

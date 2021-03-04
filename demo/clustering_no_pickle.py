@@ -843,14 +843,17 @@ def run_conll_scorer(isGold, gold_file_path, out_dir):
 	return event_f1
 
 def demo_cluster(ta):
+
 	logger.info('Test data have been loaded.')
 
-	threshold = 0.4
+	threshold = 0.25
+
+	global entailment_score, topic_event_list, coref_chain
+	entailment_score = {}
+	topic_event_list = {}
+	coref_chain = {}
 
 	with open('test_scores.txt', 'r') as entailment_file:
-
-		global entailment_score
-		entailment_score = {}
 
 		for line in entailment_file:
 			mention1, mention2, score = line.replace('\n', '').split('\t')
@@ -883,14 +886,16 @@ def demo_cluster(ta):
 
 def main():
 
+	global entailment_score, topic_event_list, coref_chain
+	entailment_score = {}
+	topic_event_list = {}
+	coref_chain = {}
+
 	logger.info('Test data have been loaded.')
 
 	threshold = 0.4
 
 	with open('test_scores.txt', 'r') as entailment_file:
-
-		global entailment_score
-		entailment_score = {}
 
 		for line in entailment_file:
 			mention1, mention2, score = line.replace('\n', '').split('\t')

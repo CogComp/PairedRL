@@ -8,6 +8,9 @@ data = {}
 
 def ReadData(ta):
 
+	event_all = []
+	data = {}
+
 	# for doc_id in ta.keys():
 	doc_dict = ta
 	doc_id = 'input'
@@ -15,7 +18,6 @@ def ReadData(ta):
 	doc.set_doc_info(str(doc_id), '')
 	last_index = 0
 	sen_token_idx = []
-	print(doc_dict)
 	total_sen = len(doc_dict['sentences']['sentenceEndPositions'])
 	for sen_idx, sen_end_idx in enumerate(doc_dict['sentences']['sentenceEndPositions']):
 		doc.sentences[sen_idx] = Sentence('0', doc_id)
@@ -34,8 +36,8 @@ def ReadData(ta):
 				sen_token_mapping[sen_id] = t_idx
 				doc.sentences[sen_id].tokens.append(token)
 				break
-	print(sen_token_idx)
-	print(token_sen_mapping)
+	# print(sen_token_idx)
+	# print(token_sen_mapping)
 
 	sen_tokens_offset = [0]
 	for i in range(1, total_sen):
@@ -44,7 +46,7 @@ def ReadData(ta):
 		# print(doc.sentences)
 		# print(doc.sentences[i-1].tokens)
 		sen_tokens_offset.append(sen_tokens_offset[i - 1] + len(doc.sentences[i-1].tokens))
-	print(sen_tokens_offset)
+	# print(sen_tokens_offset)
 	mentions_dict = {}
 	for view in doc_dict['views']:
 		if view['viewName'] == 'Event_extraction':
@@ -65,7 +67,7 @@ def ReadData(ta):
 
 	outfile = open('data/pairs.input', 'w')
 
-	print(event_all)
+	# print(event_all)
 
 	for (i, event_i) in enumerate(event_all):
 		for (j, event_j) in enumerate(event_all):
@@ -77,6 +79,9 @@ def ReadData(ta):
 			outstr.append(' '.join(sen_i.tokens))
 			outstr.append(str(event_i.start_offset))
 			outstr.append(str(event_i.end_offset))
+
+			print(data)
+			print(event_j.doc_id, event_j.sen_id)
 
 			sen_j = data[event_j.doc_id].sentences[event_j.sen_id]
 			outstr.append(' '.join(sen_j.tokens))
@@ -90,9 +95,10 @@ def ReadData(ta):
 
 			outstr.append('\n')
 			outfile.write('\t'.join(outstr))
+	outfile.close()
 
-	outfile = open('data/pickle.test', 'wb')
-	pickle.dump(data, outfile)
+	# outfile = open('data/pickle.test', 'wb')
+	# pickle.dump(data, outfile)
 
 
 def main():

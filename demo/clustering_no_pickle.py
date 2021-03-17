@@ -749,6 +749,7 @@ def test_models_demo(ta, write_clusters, out_dir, isProcessed, threshold):
 			for cluster in clusters.values():
 				outfile.write('\t'.join(cluster))
 				outfile.write('\n')
+			outfile.close()
 
 
 			# mentions_dict = {}

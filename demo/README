@@ -4,7 +4,7 @@ to install all the required packages.
 
 To run the demo, please run
 
-CUDA_VISIBLE_DEVICES=6 python -u backend.py --task_name rte --do_eval --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1 --event --english
+CUDA_VISIBLE_DEVICES=6 PYTORCH_TRANSFORMERS_CACHE="/shared/.cache/transformers" python -u backend.py --task_name rte --do_eval --do_lower_case --num_train_epochs 10 --data_dir '' --output_dir '' --train_batch_size 32 --eval_batch_size 80 --learning_rate 1e-6 --max_seq_length 128 --seed 42 --kshot 3 --beta_sampling_times 1 --event --english
 
 CUDA_VISIBLE_DEVICES does not need to be 6. Just choose an available GPU.
 

@@ -97,8 +97,13 @@ def ReadData(ta):
 			outfile.write('\t'.join(outstr))
 	outfile.close()
 
+	if len(event_all) == 1:
+		return False
+
 	# outfile = open('data/pickle.test', 'wb')
 	# pickle.dump(data, outfile)
+
+	return True
 
 
 def main():

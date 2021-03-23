@@ -34,10 +34,13 @@ class MyWebService(object):
 
         if hasJSON:
             # process input
-            ReadData(data)
-            demo_predict(args, 'data/pairs.input')
-            result = demo_cluster(data)
-            print(result)
+            if ReadData(data):
+                demo_predict(args, 'data/pairs.input')
+                result = demo_cluster(data)
+                print(result)
+            else:
+                result = data
+                print(result)
         return result
 
 

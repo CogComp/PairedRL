@@ -458,7 +458,7 @@ def feature2vector(feature, batch_size):
 	return data, sampler, dataloader
 
 
-def demo_predict(args, file):
+def demo_predict(args, file, model, tokenizer):
 
 	processors = {
 		"rte": RteProcessor
@@ -511,13 +511,13 @@ def demo_predict(args, file):
 	num_labels = len(label_list)
 	print('num_labels:', num_labels, 'test size:', len(test_examples))
 
-	model = RobertaForSequenceClassification(num_labels)
-	tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
+	# model = RobertaForSequenceClassification(num_labels)
+	# tokenizer = RobertaTokenizer.from_pretrained(pretrain_model_dir, do_lower_case=args.do_lower_case)
 	# tokenizer = XLMRobertaTokenizer.from_pretrained('xlm-roberta-large', do_lower_case=args.do_lower_case)
 
 	# model.load_state_dict(torch.load('model_original_83/f1_0.7854086361654428.pt'))
 
-	model.to(device)
+	# model.to(device)
 
 	param_optimizer = list(model.named_parameters())
 	no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
@@ -528,18 +528,18 @@ def demo_predict(args, file):
 
 	max_test_acc = 0.0
 
-	if args.event:
-		if args.english:
-			print("Loading English Event Model.")
-			model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/event/f1_0.7909405520391443.pt'))
-		else:
-			print("Loading Spanish Event Model.")
-			model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/event_xlmr/f1_0.593213087813911.pt'))
-	else:
-		if args.english:
-			model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/entity/f1_.886795317197986.pt'))
-		else:
-			model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/entity_xlmr/f1_0.4332229784922077.pt'))
+	# if args.event:
+	# 	if args.english:
+	# 		print("Loading English Event Model.")
+	# 		model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/event/f1_0.7909405520391443.pt'))
+	# 	else:
+	# 		print("Loading Spanish Event Model.")
+	# 		model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/event_xlmr/f1_0.593213087813911.pt'))
+	# else:
+	# 	if args.english:
+	# 		model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/entity/f1_.886795317197986.pt'))
+	# 	else:
+	# 		model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/entity_xlmr/f1_0.4332229784922077.pt'))
 
 	model.to(device)
 	model.eval()

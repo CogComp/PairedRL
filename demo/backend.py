@@ -8,8 +8,17 @@ import argparse
 from TextAnnotationReader import ReadData
 from predict import demo_predict
 from clustering_no_pickle import demo_cluster
+from predict import RobertaForSequenceClassification
+from transformers.tokenization_roberta import RobertaTokenizer
+import torch
 
 # import < your_code >
+
+model = RobertaForSequenceClassification(2)
+tokenizer = RobertaTokenizer.from_pretrained('roberta-large', do_lower_case=True)
+
+model.to('cuda')
+model.load_state_dict(torch.load('/shared/xdyu/event_coref/EventCoref/NLI/demo/model/event/f1_0.7909405520391443.pt'))
 
 
 class MyWebService(object):
@@ -35,7 +44,7 @@ class MyWebService(object):
         if hasJSON:
             # process input
             if ReadData(data):
-                demo_predict(args, 'data/pairs.input')
+                demo_predict(args, 'data/pairs.input', model, tokenizer)
                 result = demo_cluster(data)
                 print(result)
             else:

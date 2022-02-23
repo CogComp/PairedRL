@@ -28,6 +28,16 @@ class MyWebService(object):
         return open('html/index.html', encoding='utf-8')
 
     @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def info(self, **params):
+        return {"status": "online"}
+
+    @cherrypy.expose
+    def halt(self, **params):
+        cherrypy.engine.exit()
+
+    @cherrypy.expose
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     def annotate(self):
@@ -151,8 +161,8 @@ if __name__ == '__main__':
                         help="Loss scaling to improve fp16 numeric stability. Only used when fp16 set to True.\n"
                              "0 (default value): dynamic loss scaling.\n"
                              "Positive power of 2: static loss scaling value.\n")
-    parser.add_argument('--server_ip', type=str, default='', help="Can be used for distant debugging.")
-    parser.add_argument('--server_port', type=str, default='', help="Can be used for distant debugging.")
+    parser.add_argument('--server_ip', type=str, default='localhost', help="Can be used for distant debugging.")
+    parser.add_argument('--server_port', type=int, default=8888, help="Can be used for distant debugging.")
 
     parser.add_argument("--event",
                         action='store_true',
@@ -170,9 +180,9 @@ if __name__ == '__main__':
     config = {
         'global': {
             # 'server.socket_host': 'dickens.seas.upenn.edu',
-            'server.socket_host': 'localhost',
+            'server.socket_host': args.server_ip,
 
-            'server.socket_port': 8888,
+            'server.socket_port': args.server_port,
             'cors.expose.on': True
         },
         '/': {

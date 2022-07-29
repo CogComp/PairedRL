@@ -883,8 +883,6 @@ def demo_cluster(ta):
 	return test_models_demo(ta, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
 
 
-# test_models_for_heng('all', test_data, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
-
 def main():
 
 	global entailment_score, topic_event_list, coref_chain
@@ -922,12 +920,11 @@ def main():
 
 		entailment_file.close()
 	print(entailment_score)
-	# test_models(write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
-	# test_models_for_heng('all', test_data, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
-	data_path = 'data/sample.ta'
-	infile = open(data_path, 'r')
-	ta = json.load(infile)
-	test_models_demo(ta, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
+	test_models(write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
+	# data_path = 'data/sample.ta'
+	# infile = open(data_path, 'r')
+	# ta = json.load(infile)
+	# test_models_demo(ta, write_clusters=True, out_dir='out/', isProcessed=True, threshold=threshold)
 
 
 if __name__ == '__main__':

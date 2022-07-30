@@ -1019,7 +1019,7 @@ def main():
                             print('\ntest:', [test_acc, f1], ' max_test_f1:', max_test_acc, '\n')
         print('final_test_f1:', final_test_performance)
     else: # not training
-        model.load_state_dict(torch.load('model_ECB_arg_4score/1e-06/f1_0.8034644021568709.pt'))
+        model.load_state_dict(torch.load('model/f1_0.8034644021568709.pt'))
         model.to(device)
         model.eval()
 

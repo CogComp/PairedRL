@@ -366,12 +366,14 @@ def wordpairID_2_tokenpairID(sentence, wordindex_left, wordindex_right, full_tok
     '''first find the position of [2,2]'''
     position_two_two = 0
     for i in range(len(full_token_id_list)):
-        # if full_token_id_list[i]==2 and full_token_id_list[i+1]==2:
-        #     position_two_two = i
-        #     break
-        if full_token_id_list[i]==102:
+        # Roberta
+        if full_token_id_list[i]==2 and full_token_id_list[i+1]==2:
             position_two_two = i
             break
+        # BERT
+        # if full_token_id_list[i]==102:
+        #     position_two_two = i
+        #     break
     span = ' '.join(sentence.split()[wordindex_left: wordindex_right+1])
     if wordindex_left!=0:
         '''this span is the begining of the sent'''
@@ -838,7 +840,7 @@ def main():
             cls_token=tokenizer.cls_token,
             cls_token_segment_id=0,#2 if args.model_type in ['xlnet'] else 0,
             sep_token=tokenizer.sep_token,
-            sep_token_extra=False,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
+            sep_token_extra=True,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
             pad_on_left=False,#bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
             pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
             pad_token_segment_id=0)#4 if args.model_type in ['xlnet'] else 0,)
@@ -850,7 +852,7 @@ def main():
             cls_token=tokenizer.cls_token,
             cls_token_segment_id=0,#2 if args.model_type in ['xlnet'] else 0,
             sep_token=tokenizer.sep_token,
-            sep_token_extra=False,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
+            sep_token_extra=True,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
             pad_on_left=False,#bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
             pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
             pad_token_segment_id=0)#4 if args.model_type in ['xlnet'] else 0,)
@@ -864,7 +866,7 @@ def main():
             cls_token=tokenizer.cls_token,
             cls_token_segment_id=0,#2 if args.model_type in ['xlnet'] else 0,
             sep_token=tokenizer.sep_token,
-            sep_token_extra=False,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
+            sep_token_extra=True,#bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
             pad_on_left=False,#bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
             pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
             pad_token_segment_id=0)#4 if args.model_type in ['xlnet'] else 0,)
@@ -1029,7 +1031,7 @@ def main():
             cls_token=tokenizer.cls_token,
             cls_token_segment_id=0,  # 2 if args.model_type in ['xlnet'] else 0,
             sep_token=tokenizer.sep_token,
-            sep_token_extra=False,
+            sep_token_extra=True,
             # bool(args.model_type in ['roberta']),           # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
             pad_on_left=False,  # bool(args.model_type in ['xlnet']),                 # pad on the left for xlnet
             pad_token=tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0],
